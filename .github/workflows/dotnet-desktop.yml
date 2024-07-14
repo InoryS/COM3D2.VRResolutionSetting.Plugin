@@ -37,4 +37,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: COM3D2.VRResolutionSetting.Plugin
-          path: /home/runner/work/COM3D2.VRResolutionSetting.Plugin/COM3D2.VRResolutionSetting.Plugin/COM3D2.VRResolutionSetting.Plugin/bin/Release/COM3D2.VRResolutionSetting.Plugin.dll
+          path: /home/runner/work/COM3D2.VRResolutionSetting.Plugin/COM3D2.VRResolutionSetting.Plugin/COM3D2.VRResolutionSetting.Plugin/bin/Release/net35/COM3D2.VRResolutionSetting.Plugin.dll
