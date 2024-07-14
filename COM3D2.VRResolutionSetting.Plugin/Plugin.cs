@@ -1,16 +1,18 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
 using System;
+using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.VR;
 
 namespace COM3D2.VRResolutionSetting.Plugin
 {
-    [BepInPlugin("com.inorys.vrresolutionsetting", "COM3D2.VRResolutionSetting.Plugin", "1.0.0")]
+    [BepInPlugin("com.inorys.vrresolutionsetting", "COM3D2.VRResolutionSetting.Plugin", "1.0.1")]
     public class VRResolutionSetting : BaseUnityPlugin
     {
-        private ConfigEntry<float> _renderScaleConfig;
-        private ConfigEntry<int> _antiAliasingConfig;
+        private ConfigEntry<RenderScale> _renderScaleConfig;
+        private ConfigEntry<float> _customRenderScaleConfig;
+        private ConfigEntry<AntiAliasingLevel> _antiAliasingConfig;
         private ConfigEntry<bool> _useRecommendedMSAAConfig;
 
         void Awake()
@@ -18,34 +20,43 @@ namespace COM3D2.VRResolutionSetting.Plugin
             // Creat config
             _renderScaleConfig = Config.Bind(
                 "VR Settings",
-                "Render Scale",
-                VRSettings.renderScale,
-                "Set the VR render scale"
+                "Render Resolution Scale",
+                RenderScale.Scale10,
+                "Set the VR resolution render scale"
             );
-
+            
+            _customRenderScaleConfig = Config.Bind(
+                "VR Settings",
+                "Custom resolution Render Scale",
+                1.0f,
+                "Set a resolution custom VR render scale, set to 1.0f to use drop-down list"
+            );
+            
             _antiAliasingConfig = Config.Bind(
                 "Quality Settings",
-                "Anti Aliasing",
-                QualitySettings.antiAliasing,
-                "Set the anti-aliasing level"
+                "MSAA Anti Aliasing level",
+                AntiAliasingLevel.Level2,
+                "Set the MSAA anti-aliasing level"
             );
-
+            
             _useRecommendedMSAAConfig = Config.Bind(
                 "Quality Settings",
-                "Use Recommended MSAA Level",
+                "Use System Recommended MSAA Level",
                 false,
-                "Use the recommended MSAA level"
+                "Use the System recommended MSAA level"
             );
 
             // Add configuration item change event processing
             _renderScaleConfig.SettingChanged += OnRenderScaleChanged;
+            _customRenderScaleConfig.SettingChanged += OnRenderScaleChanged;
             _antiAliasingConfig.SettingChanged += OnAntiAliasingChanged;
             _useRecommendedMSAAConfig.SettingChanged += OnUseRecommendedMSAAChanged;
 
             // Initialize configuration item values
-            UpdateRenderScale();
-            UpdateAntiAliasing();
-            UpdateUseRecommendedMSAA();
+            _renderScaleConfig.SettingChanged -= OnRenderScaleChanged;
+            _customRenderScaleConfig.SettingChanged -= OnRenderScaleChanged;
+            _antiAliasingConfig.SettingChanged -= OnAntiAliasingChanged;
+            _useRecommendedMSAAConfig.SettingChanged -= OnUseRecommendedMSAAChanged;
         }
 
         void OnDestroy()
@@ -73,13 +84,14 @@ namespace COM3D2.VRResolutionSetting.Plugin
 
         void UpdateRenderScale()
         {
-            VRSettings.renderScale = _renderScaleConfig.Value;
+            float renderScale = _customRenderScaleConfig.Value != 1.0f ? _customRenderScaleConfig.Value : GetRenderScaleValue(_renderScaleConfig.Value);
+            VRSettings.renderScale = renderScale;
             Logger.LogInfo($"Render Scale set to {VRSettings.renderScale}");
         }
 
         void UpdateAntiAliasing()
         {
-            QualitySettings.antiAliasing = _antiAliasingConfig.Value;
+            QualitySettings.antiAliasing = (int)_antiAliasingConfig.Value;
             Logger.LogInfo($"Anti Aliasing set to {QualitySettings.antiAliasing}");
         }
 
@@ -89,6 +101,79 @@ namespace COM3D2.VRResolutionSetting.Plugin
             {
                 QualitySettings.antiAliasing = OVRManager.display.recommendedMSAALevel;
                 Logger.LogInfo($"Using recommended MSAA level: {QualitySettings.antiAliasing}");
+            }
+        }
+
+        public enum RenderScale
+        {
+            [Description("0.5")]
+            Scale05 = 0,
+            [Description("0.7")]
+            Scale07 = 1,
+            [Description("1.0")]
+            Scale10 = 2,
+            [Description("1.2")]
+            Scale12 = 3,
+            [Description("1.3")]
+            Scale13 = 5,
+            [Description("1.5")]
+            Scale15 = 6,
+            [Description("1.7")]
+            Scale17 = 7,
+            [Description("2.0")]
+            Scale20 = 8,
+            [Description("2.2")]
+            Scale22 = 9,
+            [Description("2.5")]
+            Scale25 = 10,
+            [Description("2.7")]
+            Scale27 = 11,
+            [Description("3.0")]
+            Scale30 = 12,
+        }
+
+        public enum AntiAliasingLevel
+        {
+            [Description("None")]
+            Level0 = 0,
+            [Description("2x")]
+            Level2 = 2,
+            [Description("4x")]
+            Level4 = 4,
+            [Description("8x")]
+            Level8 = 8,
+        }
+
+        float GetRenderScaleValue(RenderScale scale)
+        {
+            switch (scale)
+            {
+                case RenderScale.Scale05:
+                    return 0.5f;
+                case RenderScale.Scale07:
+                    return 0.7f;
+                case RenderScale.Scale10:
+                    return 1.0f;
+                case RenderScale.Scale12:
+                    return 1.2f;
+                case RenderScale.Scale13:
+                    return 1.3f;
+                case RenderScale.Scale15:
+                    return 1.5f;
+                case RenderScale.Scale17:
+                    return 1.7f;
+                case RenderScale.Scale20:
+                    return 2.0f;
+                case RenderScale.Scale22:
+                    return 2.2f;
+                case RenderScale.Scale25:
+                    return 2.5f;
+                case RenderScale.Scale27:
+                    return 2.7f;
+                case RenderScale.Scale30:
+                    return 3.0f;
+                default:
+                    return 1.0f;
             }
         }
     }
