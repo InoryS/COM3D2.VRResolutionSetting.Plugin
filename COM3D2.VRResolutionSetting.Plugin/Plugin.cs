@@ -7,7 +7,7 @@ using UnityEngine.VR;
 
 namespace COM3D2.VRResolutionSetting.Plugin
 {
-    [BepInPlugin("com.inorys.vrresolutionsetting", "COM3D2.VRResolutionSetting.Plugin", "1.0.2")]
+    [BepInPlugin("com.inorys.vrresolutionsetting", "COM3D2.VRResolutionSetting.Plugin", "1.0.3")]
     public class VRResolutionSetting : BaseUnityPlugin
     {
         private ConfigEntry<RenderScale> _renderScaleConfig;
@@ -51,6 +51,11 @@ namespace COM3D2.VRResolutionSetting.Plugin
             _customRenderScaleConfig.SettingChanged += OnRenderScaleChanged;
             _antiAliasingConfig.SettingChanged += OnAntiAliasingChanged;
             _useRecommendedMSAAConfig.SettingChanged += OnUseRecommendedMSAAChanged;
+            
+            // Initial update
+            UpdateRenderScale();
+            UpdateAntiAliasing();
+            UpdateUseRecommendedMSAA();
         }
 
         void OnDestroy()
@@ -128,35 +133,22 @@ namespace COM3D2.VRResolutionSetting.Plugin
 
         float GetRenderScaleValue(RenderScale scale)
         {
-            switch (scale)
+            return scale switch
             {
-                case RenderScale.Scale05:
-                    return 0.5f;
-                case RenderScale.Scale07:
-                    return 0.7f;
-                case RenderScale.Scale10:
-                    return 1.0f;
-                case RenderScale.Scale12:
-                    return 1.2f;
-                case RenderScale.Scale13:
-                    return 1.3f;
-                case RenderScale.Scale15:
-                    return 1.5f;
-                case RenderScale.Scale17:
-                    return 1.7f;
-                case RenderScale.Scale20:
-                    return 2.0f;
-                case RenderScale.Scale22:
-                    return 2.2f;
-                case RenderScale.Scale25:
-                    return 2.5f;
-                case RenderScale.Scale27:
-                    return 2.7f;
-                case RenderScale.Scale30:
-                    return 3.0f;
-                default:
-                    return 1.0f;
-            }
+                RenderScale.Scale05 => 0.5f,
+                RenderScale.Scale07 => 0.7f,
+                RenderScale.Scale10 => 1.0f,
+                RenderScale.Scale12 => 1.2f,
+                RenderScale.Scale13 => 1.3f,
+                RenderScale.Scale15 => 1.5f,
+                RenderScale.Scale17 => 1.7f,
+                RenderScale.Scale20 => 2.0f,
+                RenderScale.Scale22 => 2.2f,
+                RenderScale.Scale25 => 2.5f,
+                RenderScale.Scale27 => 2.7f,
+                RenderScale.Scale30 => 3.0f,
+                _ => 1.0f,
+            };
         }
 
         bool IsApproximatelyEqual(float a, float b, float tolerance = 0.001f)
