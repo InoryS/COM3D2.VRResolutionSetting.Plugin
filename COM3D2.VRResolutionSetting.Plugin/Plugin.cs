@@ -7,7 +7,7 @@ using UnityEngine.VR;
 
 namespace COM3D2.VRResolutionSetting.Plugin
 {
-    [BepInPlugin("com.inorys.vrresolutionsetting", "COM3D2.VRResolutionSetting.Plugin", "1.0.1")]
+    [BepInPlugin("com.inorys.vrresolutionsetting", "COM3D2.VRResolutionSetting.Plugin", "1.0.2")]
     public class VRResolutionSetting : BaseUnityPlugin
     {
         private ConfigEntry<RenderScale> _renderScaleConfig;
@@ -24,21 +24,21 @@ namespace COM3D2.VRResolutionSetting.Plugin
                 RenderScale.Scale10,
                 "Set the VR resolution render scale"
             );
-            
+
             _customRenderScaleConfig = Config.Bind(
                 "VR Settings",
                 "Custom resolution Render Scale",
                 1.0f,
                 "Set a resolution custom VR render scale, set to 1.0f to use drop-down list"
             );
-            
+
             _antiAliasingConfig = Config.Bind(
                 "Quality Settings",
                 "MSAA Anti Aliasing level",
-                AntiAliasingLevel.Level2,
+                AntiAliasingLevel.Level4,
                 "Set the MSAA anti-aliasing level"
             );
-            
+
             _useRecommendedMSAAConfig = Config.Bind(
                 "Quality Settings",
                 "Use System Recommended MSAA Level",
@@ -51,18 +51,13 @@ namespace COM3D2.VRResolutionSetting.Plugin
             _customRenderScaleConfig.SettingChanged += OnRenderScaleChanged;
             _antiAliasingConfig.SettingChanged += OnAntiAliasingChanged;
             _useRecommendedMSAAConfig.SettingChanged += OnUseRecommendedMSAAChanged;
-
-            // Initialize configuration item values
-            _renderScaleConfig.SettingChanged -= OnRenderScaleChanged;
-            _customRenderScaleConfig.SettingChanged -= OnRenderScaleChanged;
-            _antiAliasingConfig.SettingChanged -= OnAntiAliasingChanged;
-            _useRecommendedMSAAConfig.SettingChanged -= OnUseRecommendedMSAAChanged;
         }
 
         void OnDestroy()
         {
             // Remove configuration item change event processing
             _renderScaleConfig.SettingChanged -= OnRenderScaleChanged;
+            _customRenderScaleConfig.SettingChanged -= OnRenderScaleChanged;
             _antiAliasingConfig.SettingChanged -= OnAntiAliasingChanged;
             _useRecommendedMSAAConfig.SettingChanged -= OnUseRecommendedMSAAChanged;
         }
@@ -84,9 +79,12 @@ namespace COM3D2.VRResolutionSetting.Plugin
 
         void UpdateRenderScale()
         {
-            float renderScale = _customRenderScaleConfig.Value != 1.0f ? _customRenderScaleConfig.Value : GetRenderScaleValue(_renderScaleConfig.Value);
+            float customScale = _customRenderScaleConfig.Value;
+            float renderScale = !IsApproximatelyEqual(customScale, 1.0f)
+                ? customScale
+                : GetRenderScaleValue(_renderScaleConfig.Value);
             VRSettings.renderScale = renderScale;
-            Logger.LogInfo($"Render Scale set to {VRSettings.renderScale}");
+            Logger.LogInfo($"Render Scale set to {VRSettings.renderScale = renderScale}");
         }
 
         void UpdateAntiAliasing()
@@ -104,44 +102,28 @@ namespace COM3D2.VRResolutionSetting.Plugin
             }
         }
 
-        public enum RenderScale
+        private enum RenderScale
         {
-            [Description("0.5")]
-            Scale05 = 0,
-            [Description("0.7")]
-            Scale07 = 1,
-            [Description("1.0")]
-            Scale10 = 2,
-            [Description("1.2")]
-            Scale12 = 3,
-            [Description("1.3")]
-            Scale13 = 5,
-            [Description("1.5")]
-            Scale15 = 6,
-            [Description("1.7")]
-            Scale17 = 7,
-            [Description("2.0")]
-            Scale20 = 8,
-            [Description("2.2")]
-            Scale22 = 9,
-            [Description("2.5")]
-            Scale25 = 10,
-            [Description("2.7")]
-            Scale27 = 11,
-            [Description("3.0")]
-            Scale30 = 12,
+            [Description("0.5")] Scale05 = 0,
+            [Description("0.7")] Scale07 = 1,
+            [Description("1.0")] Scale10 = 2,
+            [Description("1.2")] Scale12 = 3,
+            [Description("1.3")] Scale13 = 5,
+            [Description("1.5")] Scale15 = 6,
+            [Description("1.7")] Scale17 = 7,
+            [Description("2.0")] Scale20 = 8,
+            [Description("2.2")] Scale22 = 9,
+            [Description("2.5")] Scale25 = 10,
+            [Description("2.7")] Scale27 = 11,
+            [Description("3.0")] Scale30 = 12,
         }
 
-        public enum AntiAliasingLevel
+        private enum AntiAliasingLevel
         {
-            [Description("None")]
-            Level0 = 0,
-            [Description("2x")]
-            Level2 = 2,
-            [Description("4x")]
-            Level4 = 4,
-            [Description("8x")]
-            Level8 = 8,
+            [Description("None")] Level0 = 0,
+            [Description("2x")] Level2 = 2,
+            [Description("4x")] Level4 = 4,
+            [Description("8x")] Level8 = 8,
         }
 
         float GetRenderScaleValue(RenderScale scale)
@@ -175,6 +157,11 @@ namespace COM3D2.VRResolutionSetting.Plugin
                 default:
                     return 1.0f;
             }
+        }
+
+        bool IsApproximatelyEqual(float a, float b, float tolerance = 0.001f)
+        {
+            return Math.Abs(a - b) < tolerance;
         }
     }
 }
