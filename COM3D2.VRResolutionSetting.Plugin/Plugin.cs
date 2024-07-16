@@ -7,7 +7,7 @@ using UnityEngine.VR;
 
 namespace COM3D2.VRResolutionSetting.Plugin
 {
-    [BepInPlugin("com.inorys.vrresolutionsetting", "COM3D2.VRResolutionSetting.Plugin", "1.0.3")]
+    [BepInPlugin("com.inorys.vrresolutionsetting", "COM3D2.VRResolutionSetting.Plugin", "1.0.4")]
     public class VRResolutionSetting : BaseUnityPlugin
     {
         private ConfigEntry<RenderScale> _renderScaleConfig;
@@ -22,7 +22,7 @@ namespace COM3D2.VRResolutionSetting.Plugin
                 "VR Settings",
                 "Render Resolution Scale",
                 RenderScale.Scale10,
-                "Set the VR resolution render scale"
+                "Set the VR resolution render scale, Waring this is a multiplicative relationship, setting it too high to 1.7 may cause your game to freeze"
             );
 
             _customRenderScaleConfig = Config.Bind(
@@ -110,17 +110,25 @@ namespace COM3D2.VRResolutionSetting.Plugin
         private enum RenderScale
         {
             [Description("0.5")] Scale05 = 0,
-            [Description("0.7")] Scale07 = 1,
-            [Description("1.0")] Scale10 = 2,
-            [Description("1.2")] Scale12 = 3,
-            [Description("1.3")] Scale13 = 5,
-            [Description("1.5")] Scale15 = 6,
-            [Description("1.7")] Scale17 = 7,
-            [Description("2.0")] Scale20 = 8,
-            [Description("2.2")] Scale22 = 9,
-            [Description("2.5")] Scale25 = 10,
-            [Description("2.7")] Scale27 = 11,
-            [Description("3.0")] Scale30 = 12,
+            [Description("0.6")] Scale06 = 1,
+            [Description("0.7")] Scale07 = 2,
+            [Description("0.8")] Scale08 = 3,
+            [Description("0.9")] Scale09 = 4,
+            [Description("1.0")] Scale10 = 5,
+            [Description("1.1")] Scale11 = 6,
+            [Description("1.2")] Scale12 = 7,
+            [Description("1.3")] Scale13 = 8,
+            [Description("1.4")] Scale14 = 9,
+            [Description("1.5")] Scale15 = 10,
+            [Description("1.6")] Scale16 = 11,
+            [Description("1.7")] Scale17 = 12,
+            [Description("1.8")] Scale18 = 13,
+            [Description("1.9")] Scale19 = 14,
+            [Description("2.0")] Scale20 = 15,
+            [Description("2.2")] Scale22 = 16,
+            [Description("2.5")] Scale25 = 17,
+            [Description("2.7")] Scale27 = 18,
+            [Description("3.0")] Scale30 = 19,
         }
 
         private enum AntiAliasingLevel
@@ -136,12 +144,20 @@ namespace COM3D2.VRResolutionSetting.Plugin
             return scale switch
             {
                 RenderScale.Scale05 => 0.5f,
+                RenderScale.Scale06 => 0.6f,
                 RenderScale.Scale07 => 0.7f,
+                RenderScale.Scale08 => 0.8f,
+                RenderScale.Scale09 => 0.9f,
                 RenderScale.Scale10 => 1.0f,
+                RenderScale.Scale11 => 1.1f,
                 RenderScale.Scale12 => 1.2f,
                 RenderScale.Scale13 => 1.3f,
+                RenderScale.Scale14 => 1.4f,
                 RenderScale.Scale15 => 1.5f,
+                RenderScale.Scale16 => 1.6f,
                 RenderScale.Scale17 => 1.7f,
+                RenderScale.Scale18 => 1.8f,
+                RenderScale.Scale19 => 1.9f,
                 RenderScale.Scale20 => 2.0f,
                 RenderScale.Scale22 => 2.2f,
                 RenderScale.Scale25 => 2.5f,
