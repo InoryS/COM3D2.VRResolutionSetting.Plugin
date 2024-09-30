@@ -47,18 +47,24 @@ To launch into Oculus Runtime mode, some additional steps are required.
 
 
 Launch the game via Oculus Runtime -> Virtual Desktop
-`"C:\Program Files\Virtual Desktop Streamer\VirtualDesktop.Streamer.exe" "K:\maid\COM3D2\COM3D2x64.exe" /VR`
+```
+"C:\Program Files\Virtual Desktop Streamer\VirtualDesktop.Streamer.exe" "K:\maid\COM3D2\COM3D2x64.exe" /VR
+```
 
 
 But for Virtual Desktop, I recommend using Revive because using Oculus Runtime with Virtual Desktop can make the game appear blurry(Don't know why, even if in Godlike).
 Launch the game via Oculus Runtime -> Revive -> OpenVR -> SteamVR -> Virtual Desktop
-`"C:\Program Files\Revive\ReviveInjector.exe" "K:\maid\COM3D2\COM3D2x64.exe" /VR`
+```
+"C:\Program Files\Revive\ReviveInjector.exe" "K:\maid\COM3D2\COM3D2x64.exe" /VR
+```
 
 
 
 Even if you don't use Virtual Desktop or you use PC VR or PSVR, as long as your setup can run SteamVR, I still recommend that everyone use Revive to launch the game.
 Launch the game via Oculus Runtime -> Revive -> OpenVR -> SteamVR -> PCVR software -> HMD
-`"C:\Program Files\Revive\ReviveInjector.exe" "K:\maid\COM3D2\COM3D2x64.exe" /VR`
+```
+"C:\Program Files\Revive\ReviveInjector.exe" "K:\maid\COM3D2\COM3D2x64.exe" /VR
+```
 
 
 
@@ -103,6 +109,10 @@ Right Joystick (move)     | First person movement in any direction
 Right Joystick (Press)    | Toggle Tablet
 
 I installed some plugins, so the movement may be slightly different
+
+<br>
+<br>
+<br>
 
 
 I also recommend installing some plugin
