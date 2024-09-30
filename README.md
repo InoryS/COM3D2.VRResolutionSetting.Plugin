@@ -8,7 +8,8 @@ This plugin adds in-game rendering resolution and MSAA anti-aliasing settings fo
 
 Using Virtual Desktop to play games but the image is blurry?
 
-This plugin has been retired, please see the solution below to launch the game using Revive
+This plugin has been retired, please see the solution below to launch the game using Revive and OpenVR, That allow you change resolution by using SteamVR.
+
 
 
 <br>
